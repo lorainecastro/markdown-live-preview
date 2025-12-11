@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Live Markdown → HTML Converter</title>
+
+  <style>
+    :root{ 
+      --bg:#f6f8fa; 
+      --card:#ffffff; 
+      --border:#e5e7eb;
+      --text:#111;
+      --muted:#6b7280;
+      --accent:#2563eb;
+      --hover:#1d4ed8;
+    }
+    
+    [data-theme="dark"]{
+      --bg:#0f172a;
+      --card:#1e293b;
+      --border:#334155;
+      --text:#f1f5f9;
+      --muted:#94a3b8;
+      --accent:#3b82f6;
+      --hover:#2563eb;
+    }
+    
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      background:var(--bg);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      color:var(--text);
+      transition:background 0.3s, color 0.3s;
+    }
+
+    .container{
+      padding:20px;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:20px;
+      min-height:100vh;
+    }
+
+    .card{
+      background:var(--card);
+      padding:15px;
+      border-radius:15px;
+      box-shadow:0 4px 18px rgba(0,0,0,0.1);
+      display:flex;
+      flex-direction:column;
+      transition:background 0.3s;
+    }
+
+    header{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-bottom:10px;
+      flex-wrap:wrap;
+    }
+
+    h2{
+      font-size:18px;
+      margin:0;
+      font-weight:600;
+      font-family: system-ui, sans-serif;
+    }
+
+    .controls{
+      margin-left:auto;
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    button{
+      padding:8px 14px;
+      border:none;
+      background:var(--accent);
+      color:white;
+      font-weight:600;
+      border-radius:8px;
+      cursor:pointer;
+      transition:0.2s;
+      font-size:13px;
+    }
+    button:hover{ background:var(--hover); }
+    
+    .theme-toggle{
+      background:var(--muted);
+      padding:8px 12px;
+    }
+
+    .toolbar{
+      display:flex;
+      gap:6px;
+      margin-bottom:10px;
+      flex-wrap:wrap;
+      padding:8px;
+      background:var(--bg);
+      border-radius:8px;
+      border:1px solid var(--border);
+    }
+    
+    .toolbar button{
+      padding:6px 10px;
+      font-size:12px;
+      background:var(--card);
+      color:var(--text);
+      border:1px solid var(--border);
+    }
+    
+    .toolbar button:hover{
+      background:var(--accent);
+      color:white;
+      border-color:var(--accent);
+    }
+
+    textarea{
+      width:100%;
+      flex:1;
+      resize:vertical;
+      padding:12px;
+      border-radius:10px;
+      border:1px solid var(--border);
+      font-size:14px;
+      font-family:ui-monospace,monospace;
+      min-height:400px;
+      background:var(--card);
+      color:var(--text);
+      transition:background 0.3s, color 0.3s;
+    }
+
+    .info{
+      margin-top:8px;
+      font-size:13px;
+      color:var(--muted);
+    }
+
+    .preview{
+      flex:1;
+      border:1px solid var(--border);
+      border-radius:10px;
+      padding:16px;
+      overflow:auto;
+      background:var(--card);
+    }
+
+    .preview h1, .preview h2, .preview h3{
+      margin-top:1em;
+      margin-bottom:0.5em;
+    }
+    
+    .preview p{
+      line-height:1.6;
+    }
+    
+    .preview ul, .preview ol{
+      padding-left:24px;
+    }
+    
+    .preview a{
+      color:var(--accent);
+      text-decoration:none;
+    }
+    
+    .preview a:hover{
+      text-decoration:underline;
+    }
+
+    .preview code{
+      background:#0b1220;
+      color:#f8f8f2;
+      padding:8px;
+      border-radius:8px;
+      display:block;
+      margin:10px 0;
+      white-space:pre-wrap;
+      font-size:13px;
+      font-family:ui-monospace,monospace;
+    }
+    
+    .preview :not(pre) > code{
+      display:inline;
+      padding:2px 6px;
+      background:var(--border);
+      color:var(--text);
+    }
+
+    @media(max-width:900px){
+      .container{
+        grid-template-columns:1fr;
+      }
+      .controls, .toolbar{
+        width:100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <section class="card">
+      <header>
+        <h2>Markdown Input</h2>
+        <div class="controls">
+          <button class="theme-toggle" id="themeToggle">🌙 Dark</button>
+          <button id="downloadMd">⬇️ .md</button>
+          <button id="copyHtml">📋 HTML</button>
+          <button id="exportPdf">📄 PDF</button>
+        </div>
+      </header>
+
+      <div class="toolbar">
+        <button data-insert="**" title="Bold">B</button>
+        <button data-insert="*" title="Italic">I</button>
+        <button data-insert="~~" title="Strikethrough">S</button>
+        <button data-action="h1" title="Heading 1">H1</button>
+        <button data-action="h2" title="Heading 2">H2</button>
+        <button data-action="h3" title="Heading 3">H3</button>
+        <button data-action="ul" title="Bullet List">• List</button>
+        <button data-action="ol" title="Numbered List">1. List</button>
+        <button data-action="code" title="Code Block">Code</button>
+        <button data-action="link" title="Link">Link</button>
+      </div>
+
+      <textarea id="md"># Welcome!
+Type **Markdown** here and see the preview update live.
+
+### Example:
+- **Bold text**
+- *Italic text*
+- ~~Strikethrough~~
+- [Links](https://example.com)
+
+```js
+console.log("Hello world!");
+```</textarea>
+
+      <div class="info">✓ Autosaved to your browser</div>
+    </section>
+
+    <section class="card">
+      <header>
+        <h2>HTML Preview</h2>
+        <div class="info">Rendered output — sanitized for safety</div>
+      </header>
+
+      <div id="preview" class="preview"></div>
+    </section>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify/dist/purify.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <script>
+    const md = document.getElementById("md");
+    const preview = document.getElementById("preview");
+    const copyBtn = document.getElementById("copyHtml");
+    const downloadBtn = document.getElementById("downloadMd");
+    const pdfBtn = document.getElementById("exportPdf");
+    const themeToggle = document.getElementById("themeToggle");
+
+    marked.setOptions({ breaks: true, gfm: true, mangle: false, headerIds: true });
+
+    function renderHTML() {
+      const raw = md.value;
+      const html = marked.parse(raw);
+      const clean = DOMPurify.sanitize(html);
+      preview.innerHTML = clean;
+      localStorage.setItem("markdown-autosave", raw);
+    }
+
+    const saved = localStorage.getItem("markdown-autosave");
+    if (saved) md.value = saved;
+
+    renderHTML();
+
+    md.addEventListener("input", () => {
+      clearTimeout(window._t);
+      window._t = setTimeout(renderHTML, 150);
+    });
+
+    copyBtn.addEventListener("click", async () => {
+      await navigator.clipboard.writeText(preview.innerHTML);
+      copyBtn.textContent = "✓ Copied!";
+      setTimeout(() => copyBtn.textContent = "📋 HTML", 1200);
+    });
+
+    downloadBtn.addEventListener("click", () => {
+      const blob = new Blob([md.value], { type: "text/markdown" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "markdown.md";
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    pdfBtn.addEventListener("click", () => {
+      const opt = {
+        margin: 15,
+        filename: 'markdown-export.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+      
+      pdfBtn.textContent = "⏳ Generating...";
+      html2pdf().set(opt).from(preview).save().then(() => {
+        pdfBtn.textContent = "✓ Saved!";
+        setTimeout(() => pdfBtn.textContent = "📄 PDF", 1500);
+      });
+    });
+
+    const savedTheme = localStorage.getItem("theme") || "light";
+    document.documentElement.setAttribute("data-theme", savedTheme);
+    themeToggle.textContent = savedTheme === "dark" ? "☀️ Light" : "🌙 Dark";
+
+    themeToggle.addEventListener("click", () => {
+      const current = document.documentElement.getAttribute("data-theme");
+      const newTheme = current === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", newTheme);
+      localStorage.setItem("theme", newTheme);
+      themeToggle.textContent = newTheme === "dark" ? "☀️ Light" : "🌙 Dark";
+    });
+
+    document.querySelector(".toolbar").addEventListener("click", (e) => {
+      const btn = e.target.closest("button");
+      if (!btn) return;
+
+      const start = md.selectionStart;
+      const end = md.selectionEnd;
+      const selected = md.value.substring(start, end);
+      const before = md.value.substring(0, start);
+      const after = md.value.substring(end);
+
+      let newText = "";
+      let cursorPos = start;
+
+      if (btn.dataset.insert) {
+        const wrap = btn.dataset.insert;
+        newText = before + wrap + selected + wrap + after;
+        cursorPos = start + wrap.length + selected.length + wrap.length;
+      } else if (btn.dataset.action === "h1") {
+        newText = before + "# " + selected + after;
+        cursorPos = start + 2 + selected.length;
+      } else if (btn.dataset.action === "h2") {
+        newText = before + "## " + selected + after;
+        cursorPos = start + 3 + selected.length;
+      } else if (btn.dataset.action === "h3") {
+        newText = before + "### " + selected + after;
+        cursorPos = start + 4 + selected.length;
+      } else if (btn.dataset.action === "ul") {
+        newText = before + "- " + selected + after;
+        cursorPos = start + 2 + selected.length;
+      } else if (btn.dataset.action === "ol") {
+        newText = before + "1. " + selected + after;
+        cursorPos = start + 3 + selected.length;
+      } else if (btn.dataset.action === "code") {
+        newText = before + "```\n" + selected + "\n```" + after;
+        cursorPos = start + 4 + selected.length;
+      } else if (btn.dataset.action === "link") {
+        newText = before + "[" + selected + "](url)" + after;
+        cursorPos = start + selected.length + 3;
+      }
+
+      md.value = newText;
+      md.focus();
+      md.setSelectionRange(cursorPos, cursorPos);
+      renderHTML();
+    });
+  </script>
+
+</body>
+</html>
