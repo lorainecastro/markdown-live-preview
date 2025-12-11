@@ -580,8 +580,9 @@ console.log("Hello, World!");
           newText = before + "```\n" + selected + "\n```" + after;
           cursorPos = start + 4 + selected.length;
         } else if (btn.dataset.action === "link") {
-          newText = before + "[" + selected + "](url)" + after;
-          cursorPos = start + selected.length + 3;
+          const linkText = selected || "link text";
+          newText = before + `[${linkText}](https://)` + after;
+          cursorPos = start + linkText.length + 9; // puts cursor inside the URL
         }
 
         md.value = newText;
