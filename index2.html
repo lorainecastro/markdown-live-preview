@@ -1,0 +1,660 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Markdown Studio</title>
+
+  <style>
+    :root{ 
+      --bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --card:#ffffff;
+      --card-hover:#f8fafc;
+      --border:#e2e8f0;
+      --text:#1e293b;
+      --text-muted:#64748b;
+      --accent:#8b5cf6;
+      --accent-hover:#7c3aed;
+      --success:#10b981;
+      --shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+      --shadow-lg: 0 25px 50px -12px rgba(0,0,0,0.25);
+    }
+    
+    [data-theme="dark"]{
+      --bg: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+      --card:#1e293b;
+      --card-hover:#334155;
+      --border:#334155;
+      --text:#f1f5f9;
+      --text-muted:#94a3b8;
+      --accent:#a78bfa;
+      --accent-hover:#8b5cf6;
+      --success:#34d399;
+      --shadow: 0 20px 25px -5px rgba(0,0,0,0.4), 0 10px 10px -5px rgba(0,0,0,0.3);
+      --shadow-lg: 0 25px 50px -12px rgba(0,0,0,0.5);
+    }
+    
+    * { 
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body{
+      background: var(--bg);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      color: var(--text);
+      min-height: 100vh;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .app-header{
+      padding: 24px;
+      text-align: center;
+      color: white;
+    }
+
+    .app-header h1{
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .app-header p{
+      font-size: 15px;
+      opacity: 0.9;
+    }
+
+    .container{
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 0 24px 32px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .card{
+      background: var(--card);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .card:hover{
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+
+    .card-header{
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--card-hover);
+    }
+
+    .card-title{
+      font-size: 18px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text);
+    }
+
+    .icon{
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .controls{
+      margin-left: auto;
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn{
+      padding: 10px 16px;
+      border: none;
+      background: var(--accent);
+      color: white;
+      font-weight: 600;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 6px -1px rgba(139, 92, 246, 0.2);
+    }
+
+    .btn:hover{ 
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 10px 15px -3px rgba(139, 92, 246, 0.3);
+    }
+
+    .btn:active{
+      transform: translateY(0);
+    }
+    
+    .btn-secondary{
+      background: var(--text-muted);
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    }
+
+    .btn-secondary:hover{
+      background: var(--text);
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2);
+    }
+
+    .btn .icon{
+      width: 16px;
+      height: 16px;
+    }
+
+    .toolbar{
+      display: flex;
+      gap: 6px;
+      padding: 16px 24px;
+      flex-wrap: wrap;
+      border-bottom: 1px solid var(--border);
+      background: var(--card-hover);
+    }
+    
+    .toolbar-btn{
+      padding: 8px 12px;
+      font-size: 13px;
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .toolbar-btn:hover{
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .toolbar-btn .icon{
+      width: 14px;
+      height: 14px;
+    }
+
+    textarea{
+      width: 100%;
+      flex: 1;
+      padding: 24px;
+      border: none;
+      font-size: 15px;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      min-height: 500px;
+      background: var(--card);
+      color: var(--text);
+      transition: all 0.3s ease;
+      line-height: 1.6;
+      resize: none;
+    }
+
+    textarea:focus{
+      outline: none;
+    }
+
+    .card-footer{
+      padding: 12px 24px;
+      font-size: 13px;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--card-hover);
+    }
+
+    .status-dot{
+      width: 8px;
+      height: 8px;
+      background: var(--success);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse{
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .preview{
+      flex: 1;
+      padding: 32px;
+      overflow: auto;
+      background: var(--card);
+      line-height: 1.7;
+    }
+
+    .preview h1{
+      font-size: 32px;
+      font-weight: 800;
+      margin: 24px 0 16px;
+      color: var(--text);
+    }
+
+    .preview h2{
+      font-size: 24px;
+      font-weight: 700;
+      margin: 20px 0 12px;
+      color: var(--text);
+    }
+
+    .preview h3{
+      font-size: 20px;
+      font-weight: 600;
+      margin: 16px 0 10px;
+      color: var(--text);
+    }
+    
+    .preview p{
+      margin: 12px 0;
+      color: var(--text);
+    }
+    
+    .preview ul, .preview ol{
+      padding-left: 28px;
+      margin: 12px 0;
+    }
+
+    .preview li{
+      margin: 6px 0;
+    }
+    
+    .preview a{
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 1px solid transparent;
+      transition: border 0.2s;
+    }
+    
+    .preview a:hover{
+      border-bottom-color: var(--accent);
+    }
+
+    .preview pre{
+      background: #1e293b;
+      padding: 16px;
+      border-radius: 12px;
+      overflow-x: auto;
+      margin: 16px 0;
+    }
+
+    .preview code{
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+    }
+
+    .preview pre code{
+      color: #e2e8f0;
+      display: block;
+    }
+    
+    .preview :not(pre) > code{
+      background: var(--border);
+      color: var(--accent);
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .preview blockquote{
+      border-left: 4px solid var(--accent);
+      padding-left: 16px;
+      margin: 16px 0;
+      font-style: italic;
+      color: var(--text-muted);
+    }
+
+    @media(max-width: 1024px){
+      .container{
+        grid-template-columns: 1fr;
+      }
+      
+      .controls{
+        flex-wrap: wrap;
+      }
+    }
+
+    ::-webkit-scrollbar{
+      width: 10px;
+      height: 10px;
+    }
+
+    ::-webkit-scrollbar-track{
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb{
+      background: var(--border);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover{
+      background: var(--text-muted);
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="app-header">
+  </header>
+
+  <div class="container">
+
+    <section class="card">
+      <div class="card-header">
+        <h2 class="card-title">
+          <svg class="icon" viewBox="0 0 24 24">
+            <path d="M12 2L2 7v10c0 5.5 3.8 10.7 9 12 5.2-1.3 9-6.5 9-12V7l-10-5z"/>
+          </svg>
+          Markdown Editor
+        </h2>
+        <div class="controls">
+          <button class="btn btn-secondary" id="themeToggle">
+            <svg class="icon" viewBox="0 0 24 24">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+            <span id="themeText">Dark</span>
+          </button>
+          <button class="btn" id="downloadMd">
+            <svg class="icon" viewBox="0 0 24 24">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+            </svg>
+            .md
+          </button>
+          <button class="btn" id="copyHtml">
+            <svg class="icon" viewBox="0 0 24 24">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            </svg>
+            HTML
+          </button>
+          <button class="btn" id="exportPdf">
+            <svg class="icon" viewBox="0 0 24 24">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+            </svg>
+            PDF
+          </button>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <button class="toolbar-btn" data-insert="**" title="Bold (Ctrl+B)">
+          <svg class="icon" viewBox="0 0 24 24">
+            <path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"/>
+            <path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"/>
+          </svg>
+          Bold
+        </button>
+        <button class="toolbar-btn" data-insert="*" title="Italic (Ctrl+I)">
+          <svg class="icon" viewBox="0 0 24 24">
+            <line x1="19" y1="4" x2="10" y2="4"/>
+            <line x1="14" y1="20" x2="5" y2="20"/>
+            <line x1="15" y1="4" x2="9" y2="20"/>
+          </svg>
+          Italic
+        </button>
+        <button class="toolbar-btn" data-insert="~~" title="Strikethrough">
+          <svg class="icon" viewBox="0 0 24 24">
+            <path d="M17.3 4.9c-2.3-1.2-5.2-1.2-7.5 0L6 7.2M3 12h18M17 16.5c-2.3 1.2-5.2 1.2-7.5 0L6 14.2"/>
+          </svg>
+          Strike
+        </button>
+        <button class="toolbar-btn" data-action="h1" title="Heading 1">
+          <svg class="icon" viewBox="0 0 24 24">
+            <path d="M4 12h8M4 18V6M12 18V6"/>
+            <text x="14" y="17" font-size="10" font-weight="bold" fill="currentColor">1</text>
+          </svg>
+        </button>
+        <button class="toolbar-btn" data-action="h2" title="Heading 2">
+          <svg class="icon" viewBox="0 0 24 24">
+            <path d="M4 12h8M4 18V6M12 18V6"/>
+            <text x="14" y="17" font-size="10" font-weight="bold" fill="currentColor">2</text>
+          </svg>
+        </button>
+        <button class="toolbar-btn" data-action="ul" title="Bullet List">
+          <svg class="icon" viewBox="0 0 24 24">
+            <line x1="8" y1="6" x2="21" y2="6"/>
+            <line x1="8" y1="12" x2="21" y2="12"/>
+            <line x1="8" y1="18" x2="21" y2="18"/>
+            <circle cx="4" cy="6" r="1" fill="currentColor"/>
+            <circle cx="4" cy="12" r="1" fill="currentColor"/>
+            <circle cx="4" cy="18" r="1" fill="currentColor"/>
+          </svg>
+          List
+        </button>
+        <button class="toolbar-btn" data-action="code" title="Code Block">
+          <svg class="icon" viewBox="0 0 24 24">
+            <polyline points="16 18 22 12 16 6"/>
+            <polyline points="8 6 2 12 8 18"/>
+          </svg>
+          Code
+        </button>
+        <button class="toolbar-btn" data-action="link" title="Insert Link">
+          <svg class="icon" viewBox="0 0 24 24">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+          </svg>
+          Link
+        </button>
+      </div>
+
+      <textarea id="md" placeholder="Start typing your markdown here..."># Welcome to Markdown Studio! ✨
+
+Transform your **plain text** into *beautiful* formatted content.
+
+## Features
+
+- 🎨 **Modern Design** - Beautiful gradient backgrounds
+- 🌙 **Dark Mode** - Easy on the eyes
+- 📝 **Live Preview** - See changes instantly
+- 💾 **Auto-save** - Never lose your work
+- 📄 **Export** - PDF, HTML, or Markdown
+
+## Quick Guide
+
+### Text Formatting
+- **Bold text** with `**bold**`
+- *Italic text* with `*italic*`
+- ~~Strikethrough~~ with `~~text~~`
+
+### Links & Code
+Check out [Markdown Guide](https://www.markdownguide.org) for more!
+
+```javascript
+console.log("Hello, World!");
+```
+
+> Start creating something amazing! 🚀</textarea>
+
+      <div class="card-footer">
+        <span class="status-dot"></span>
+        Auto-saved to browser
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-header">
+        <h2 class="card-title">
+          <svg class="icon" viewBox="0 0 24 24">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+          </svg>
+          Live Preview
+        </h2>
+      </div>
+
+      <div id="preview" class="preview"></div>
+      
+      <div class="card-footer">
+        Rendered with Marked.js & sanitized
+      </div>
+    </section>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify/dist/purify.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <script>
+    const md = document.getElementById("md");
+    const preview = document.getElementById("preview");
+    const copyBtn = document.getElementById("copyHtml");
+    const downloadBtn = document.getElementById("downloadMd");
+    const pdfBtn = document.getElementById("exportPdf");
+    const themeToggle = document.getElementById("themeToggle");
+    const themeText = document.getElementById("themeText");
+
+    marked.setOptions({ 
+      breaks: true, 
+      gfm: true, 
+      mangle: false, 
+      headerIds: true 
+    });
+
+    function renderHTML() {
+      const raw = md.value;
+      const html = marked.parse(raw);
+      const clean = DOMPurify.sanitize(html);
+      preview.innerHTML = clean;
+      localStorage.setItem("markdown-studio", raw);
+    }
+
+    const saved = localStorage.getItem("markdown-studio");
+    if (saved) md.value = saved;
+
+    renderHTML();
+
+    md.addEventListener("input", () => {
+      clearTimeout(window._t);
+      window._t = setTimeout(renderHTML, 150);
+    });
+
+    copyBtn.addEventListener("click", async () => {
+      await navigator.clipboard.writeText(preview.innerHTML);
+      const original = copyBtn.innerHTML;
+      copyBtn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
+      setTimeout(() => copyBtn.innerHTML = original, 1500);
+    });
+
+    downloadBtn.addEventListener("click", () => {
+      const blob = new Blob([md.value], { type: "text/markdown" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "markdown.md";
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    pdfBtn.addEventListener("click", () => {
+      const opt = {
+        margin: 15,
+        filename: 'markdown-studio-export.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+      
+      const original = pdfBtn.innerHTML;
+      pdfBtn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Generating...';
+      html2pdf().set(opt).from(preview).save().then(() => {
+        pdfBtn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Saved!';
+        setTimeout(() => pdfBtn.innerHTML = original, 2000);
+      });
+    });
+
+    const savedTheme = localStorage.getItem("theme") || "light";
+    document.documentElement.setAttribute("data-theme", savedTheme);
+    updateThemeButton(savedTheme);
+
+    function updateThemeButton(theme) {
+      if (theme === "dark") {
+        themeToggle.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg><span id="themeText">Light</span>';
+      } else {
+        themeToggle.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><span id="themeText">Dark</span>';
+      }
+    }
+
+    themeToggle.addEventListener("click", () => {
+      const current = document.documentElement.getAttribute("data-theme");
+      const newTheme = current === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", newTheme);
+      localStorage.setItem("theme", newTheme);
+      updateThemeButton(newTheme);
+    });
+
+    document.querySelector(".toolbar").addEventListener("click", (e) => {
+      const btn = e.target.closest(".toolbar-btn");
+      if (!btn) return;
+
+      const start = md.selectionStart;
+      const end = md.selectionEnd;
+      const selected = md.value.substring(start, end);
+      const before = md.value.substring(0, start);
+      const after = md.value.substring(end);
+
+      let newText = "";
+      let cursorPos = start;
+
+      if (btn.dataset.insert) {
+        const wrap = btn.dataset.insert;
+        newText = before + wrap + selected + wrap + after;
+        cursorPos = start + wrap.length + selected.length + wrap.length;
+      } else if (btn.dataset.action === "h1") {
+        newText = before + "# " + selected + after;
+        cursorPos = start + 2 + selected.length;
+      } else if (btn.dataset.action === "h2") {
+        newText = before + "## " + selected + after;
+        cursorPos = start + 3 + selected.length;
+      } else if (btn.dataset.action === "ul") {
+        newText = before + "- " + selected + after;
+        cursorPos = start + 2 + selected.length;
+      } else if (btn.dataset.action === "code") {
+        newText = before + "```\n" + selected + "\n```" + after;
+        cursorPos = start + 4 + selected.length;
+      } else if (btn.dataset.action === "link") {
+        newText = before + "[" + selected + "](url)" + after;
+        cursorPos = start + selected.length + 3;
+      }
+
+      md.value = newText;
+      md.focus();
+      md.setSelectionRange(cursorPos, cursorPos);
+      renderHTML();
+    });
+  </script>
+
+</body>
+</html>
