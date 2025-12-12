@@ -584,6 +584,9 @@ console.log("Hello, World!");
           const linkText = selected || "link text";
           newText = before + `[${linkText}](https://)` + after;
           cursorPos = start + linkText.length + 9; // puts cursor inside the URL
+        } else if (btn.dataset.action === "quote") {
+          newText = before + "> " + selected + after;
+          cursorPos = start + 2 + selected.length;
         }
 
         md.value = newText;
