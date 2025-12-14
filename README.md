@@ -9,7 +9,7 @@ A modern, responsive Markdown editor with a live side-by-side preview, built ent
 - **Formatting Toolbar** — Quick buttons for bold, italic, strikethrough, headings, lists, code blocks, links, and quotes
 - **Auto-Save** — Your work is saved to the browser automatically
 - **Exports** — Download as .md, copy rendered HTML, or export to PDF
-- **Secure Rendering** — Powered by marked.js and DOMPurify for safe, GitHub-flavored Markdown
+- **Secure Rendering** — Powered by marked.js (GitHub Flavored Markdown) and sanitized with DOMPurify
 - **Fully Portable** — Single HTML file, works offline after loading
 
 ## Libraries Used
