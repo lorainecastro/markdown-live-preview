@@ -2,8 +2,6 @@
 
 A modern, responsive Markdown editor with a live side-by-side preview, built entirely with pure HTML, CSS, and JavaScript. Features instant rendering, a handy formatting toolbar, dark/light mode, auto-save, and easy exports in a single portable file.
 
-[**Try the Live Demo**](https://lorainecastro.github.io/markdown-live-preview/)
-
 ## Key Features
 - **Live Side-by-Side Preview** — See beautifully rendered Markdown instantly as you type
 - **Modern Design** — Clean cards, rounded corners, subtle shadows, and fully responsive layout
