@@ -4,6 +4,8 @@ A modern, responsive Markdown editor with a live side-by-side preview, built ent
 
 [**Try the Live Demo**](https://lorainecastro.github.io/markdown-live-preview/)
 
+![Markdown Live Preview Banner](image.png)
+
 ## Key Features
 - **Live Side-by-Side Preview** — See beautifully rendered Markdown instantly as you type
 - **Modern Design** — Clean cards, rounded corners, subtle shadows, and fully responsive layout
