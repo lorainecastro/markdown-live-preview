@@ -1,149 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Markdown Live Preview</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <div class="container">
-      <section class="card">
-        <header>
-          <h2>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Markdown Live Preview</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div class="container">
+    <section class="card">
+      <header>
+        <h2>
+          <svg class="icon" viewBox="0 0 24 24">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <polyline points="14 2 14 8 20 8" />
+            <line x1="16" y1="13" x2="8" y2="13" />
+            <line x1="16" y1="17" x2="8" y2="17" />
+            <polyline points="10 9 9 9 8 9" />
+          </svg>
+          Markdown Input
+        </h2>
+        <div class="controls">
+          <button class="theme-toggle" id="themeToggle">
             <svg class="icon" viewBox="0 0 24 24">
-              <path
-                d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
-              />
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+            </svg>
+            Dark
+          </button>
+          <button id="downloadMd">
+            <svg class="icon" viewBox="0 0 24 24">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+            .md
+          </button>
+          <button id="copyHtml">
+            <svg class="icon" viewBox="0 0 24 24">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+            </svg>
+            HTML
+          </button>
+          <button id="exportPdf">
+            <svg class="icon" viewBox="0 0 24 24">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
               <polyline points="14 2 14 8 20 8" />
               <line x1="16" y1="13" x2="8" y2="13" />
               <line x1="16" y1="17" x2="8" y2="17" />
-              <polyline points="10 9 9 9 8 9" />
             </svg>
-            Markdown Input
-          </h2>
-          <div class="controls">
-            <button class="theme-toggle" id="themeToggle">
-              <svg class="icon" viewBox="0 0 24 24">
-                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-              </svg>
-              Dark
-            </button>
-            <button id="downloadMd">
-              <svg class="icon" viewBox="0 0 24 24">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <polyline points="7 10 12 15 17 10" />
-                <line x1="12" y1="15" x2="12" y2="3" />
-              </svg>
-              .md
-            </button>
-            <button id="copyHtml">
-              <svg class="icon" viewBox="0 0 24 24">
-                <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                <path
-                  d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
-                />
-              </svg>
-              HTML
-            </button>
-            <button id="exportPdf">
-              <svg class="icon" viewBox="0 0 24 24">
-                <path
-                  d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
-                />
-                <polyline points="14 2 14 8 20 8" />
-                <line x1="16" y1="13" x2="8" y2="13" />
-                <line x1="16" y1="17" x2="8" y2="17" />
-              </svg>
-              PDF
-            </button>
-          </div>
-        </header>
-
-        <div class="toolbar">
-          <button data-insert="**" title="Bold">
-            <svg class="icon" viewBox="0 0 24 24">
-              <path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z" />
-              <path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z" />
-            </svg>
-            Bold
+            PDF
           </button>
-          <button data-insert="*" title="Italic">
-            <svg class="icon" viewBox="0 0 24 24">
-              <line x1="19" y1="4" x2="10" y2="4" />
-              <line x1="14" y1="20" x2="5" y2="20" />
-              <line x1="15" y1="4" x2="9" y2="20" />
-            </svg>
-            Italic
-          </button>
-          <button data-insert="~~" title="Strikethrough">
-            <svg class="icon" viewBox="0 0 24 24">
-              <path
-                d="M17.3 4.9c-2.3-1.2-5.2-1.2-7.5 0L6 7.2M3 12h18M17 16.5c-2.3 1.2-5.2 1.2-7.5 0L6 14.2"
-              />
-            </svg>
-            Strike
-          </button>
-          <button data-action="h1" title="Heading 1">
-            <svg class="icon" viewBox="0 0 24 24">
-              <path d="M4 12h8M4 18V6M12 18V6" />
-            </svg>
-            H1
-          </button>
-          <button data-action="h2" title="Heading 2">
-            <svg class="icon" viewBox="0 0 24 24">
-              <path d="M4 12h8M4 18V6M12 18V6" />
-            </svg>
-            H2
-          </button>
-          <button data-action="h3" title="Heading 3">
-            <svg class="icon" viewBox="0 0 24 24">
-              <path d="M4 12h8M4 18V6M12 18V6" />
-            </svg>
-            H3
-          </button>
-          <button data-action="ul" title="Bullet List">
-            <svg class="icon" viewBox="0 0 24 24">
-              <line x1="8" y1="6" x2="21" y2="6" />
-              <line x1="8" y1="12" x2="21" y2="12" />
-              <line x1="8" y1="18" x2="21" y2="18" />
-              <line x1="3" y1="6" x2="3.01" y2="6" />
-              <line x1="3" y1="12" x2="3.01" y2="12" />
-              <line x1="3" y1="18" x2="3.01" y2="18" />
-            </svg>
-            List
-          </button>
-          <button data-action="ol" title="Numbered List">
-            <svg class="icon" viewBox="0 0 24 24">
-              <line x1="10" y1="6" x2="21" y2="6" />
-              <line x1="10" y1="12" x2="21" y2="12" />
-              <line x1="10" y1="18" x2="21" y2="18" />
-              <path d="M4 6h1v4M4 10h2" />
-            </svg>
-            List
-          </button>
-          <button data-action="code" title="Code Block">
-            <svg class="icon" viewBox="0 0 24 24">
-              <polyline points="16 18 22 12 16 6" />
-              <polyline points="8 6 2 12 8 18" />
-            </svg>
-            Code
-          </button>
-          <button data-action="link" title="Link">
-            <svg class="icon" viewBox="0 0 24 24">
-              <path
-                d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"
-              />
-              <path
-                d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"
-              />
-            </svg>
-            Link
-          </button>
-          <button data-action="quote" title="Quote">Quote</button>
         </div>
+      </header>
 
-        <textarea id="md">
+      <div class="toolbar">
+        <button data-insert="**" title="Bold">
+          <svg class="icon" viewBox="0 0 24 24">
+            <path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z" />
+            <path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z" />
+          </svg>
+          Bold
+        </button>
+        <button data-insert="*" title="Italic">
+          <svg class="icon" viewBox="0 0 24 24">
+            <line x1="19" y1="4" x2="10" y2="4" />
+            <line x1="14" y1="20" x2="5" y2="20" />
+            <line x1="15" y1="4" x2="9" y2="20" />
+          </svg>
+          Italic
+        </button>
+        <button data-insert="~~" title="Strikethrough">
+          <svg class="icon" viewBox="0 0 24 24">
+            <path d="M17.3 4.9c-2.3-1.2-5.2-1.2-7.5 0L6 7.2M3 12h18M17 16.5c-2.3 1.2-5.2 1.2-7.5 0L6 14.2" />
+          </svg>
+          Strike
+        </button>
+        <button data-action="h1" title="Heading 1">
+          <svg class="icon" viewBox="0 0 24 24">
+            <path d="M4 12h8M4 18V6M12 18V6" />
+          </svg>
+          H1
+        </button>
+        <button data-action="h2" title="Heading 2">
+          <svg class="icon" viewBox="0 0 24 24">
+            <path d="M4 12h8M4 18V6M12 18V6" />
+          </svg>
+          H2
+        </button>
+        <button data-action="h3" title="Heading 3">
+          <svg class="icon" viewBox="0 0 24 24">
+            <path d="M4 12h8M4 18V6M12 18V6" />
+          </svg>
+          H3
+        </button>
+        <button data-action="ul" title="Bullet List">
+          <svg class="icon" viewBox="0 0 24 24">
+            <line x1="8" y1="6" x2="21" y2="6" />
+            <line x1="8" y1="12" x2="21" y2="12" />
+            <line x1="8" y1="18" x2="21" y2="18" />
+            <line x1="3" y1="6" x2="3.01" y2="6" />
+            <line x1="3" y1="12" x2="3.01" y2="12" />
+            <line x1="3" y1="18" x2="3.01" y2="18" />
+          </svg>
+          List
+        </button>
+        <button data-action="ol" title="Numbered List">
+          <svg class="icon" viewBox="0 0 24 24">
+            <line x1="10" y1="6" x2="21" y2="6" />
+            <line x1="10" y1="12" x2="21" y2="12" />
+            <line x1="10" y1="18" x2="21" y2="18" />
+            <path d="M4 6h1v4M4 10h2" />
+          </svg>
+          List
+        </button>
+        <button data-action="code" title="Code Block">
+          <svg class="icon" viewBox="0 0 24 24">
+            <polyline points="16 18 22 12 16 6" />
+            <polyline points="8 6 2 12 8 18" />
+          </svg>
+          Code
+        </button>
+        <button data-action="link" title="Link">
+          <svg class="icon" viewBox="0 0 24 24">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+          </svg>
+          Link
+        </button>
+        <button data-action="quote" title="Quote">Quote</button>
+      </div>
+
+      <textarea id="md">
 # Welcome to Markdown Live Preview! ✨
 
 Transform your **plain text** into *beautiful* formatted content.
@@ -172,179 +162,179 @@ console.log("Hello, World!");
 
 ```
 
-> Start creating something amazing! 🚀</textarea
-        >
+> Start creating something amazing! 🚀</textarea>
 
-        <div class="info">✓ Auto-saved to browser</div>
-      </section>
+      <div class="info">✓ Auto-saved to browser</div>
+    </section>
 
-      <section class="card">
-        <header>
-          <h2>
-            <svg class="icon" viewBox="0 0 24 24">
-              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-            </svg>
-            Live Preview
-          </h2>
-        </header>
+    <section class="card">
+      <header>
+        <h2>
+          <svg class="icon" viewBox="0 0 24 24">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+          </svg>
+          Live Preview
+        </h2>
+      </header>
 
-        <div id="preview" class="preview"></div>
-      </section>
-    </div>
+      <div id="preview" class="preview"></div>
+    </section>
+  </div>
 
-    <footer>© 2025 Markdown Live Preview</footer>
+  <footer>© 2025 Markdown Live Preview</footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-    <script>
-      const md = document.getElementById("md");
-      const preview = document.getElementById("preview");
-      const copyBtn = document.getElementById("copyHtml");
-      const downloadBtn = document.getElementById("downloadMd");
-      const pdfBtn = document.getElementById("exportPdf");
-      const themeToggle = document.getElementById("themeToggle");
+  <script>
+    const md = document.getElementById("md");
+    const preview = document.getElementById("preview");
+    const copyBtn = document.getElementById("copyHtml");
+    const downloadBtn = document.getElementById("downloadMd");
+    const pdfBtn = document.getElementById("exportPdf");
+    const themeToggle = document.getElementById("themeToggle");
 
-      marked.setOptions({
-        breaks: true,
-        gfm: true,
-        mangle: false,
-        headerIds: true,
-      });
+    marked.setOptions({
+      breaks: true,
+      gfm: true,
+      mangle: false,
+      headerIds: true,
+    });
 
-      function renderHTML() {
-        const raw = md.value;
-        const html = marked.parse(raw);
-        const clean = DOMPurify.sanitize(html);
-        preview.innerHTML = clean;
-        localStorage.setItem("markdown-autosave", raw);
-      }
+    function renderHTML() {
+      const raw = md.value;
+      const html = marked.parse(raw);
+      const clean = DOMPurify.sanitize(html);
+      preview.innerHTML = clean;
+      localStorage.setItem("markdown-autosave", raw);
+    }
 
-      const saved = localStorage.getItem("markdown-autosave");
-      if (saved) md.value = saved;
+    const saved = localStorage.getItem("markdown-autosave");
+    if (saved) md.value = saved;
 
-      renderHTML();
+    renderHTML();
 
-      md.addEventListener("input", () => {
-        clearTimeout(window._t);
-        window._t = setTimeout(renderHTML, 150);
-      });
+    md.addEventListener("input", () => {
+      clearTimeout(window._t);
+      window._t = setTimeout(renderHTML, 150);
+    });
 
-      copyBtn.addEventListener("click", async () => {
-        await navigator.clipboard.writeText(preview.innerHTML);
-        const origText = copyBtn.textContent;
-        copyBtn.innerHTML =
-          '<svg class="icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
-        setTimeout(
-          () =>
-            (copyBtn.innerHTML =
-              '<svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> HTML'),
-          1200
-        );
-      });
+    copyBtn.addEventListener("click", async () => {
+      await navigator.clipboard.writeText(preview.innerHTML);
+      const origText = copyBtn.textContent;
+      copyBtn.innerHTML =
+        '<svg class="icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
+      setTimeout(
+        () =>
+        (copyBtn.innerHTML =
+          '<svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> HTML'),
+        1200
+      );
+    });
 
-      downloadBtn.addEventListener("click", () => {
-        const blob = new Blob([md.value], { type: "text/markdown" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "markdown.md";
-        a.click();
-        URL.revokeObjectURL(url);
-      });
+    downloadBtn.addEventListener("click", () => {
+      const blob = new Blob([md.value], { type: "text/markdown" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "markdown.md";
+      a.click();
+      URL.revokeObjectURL(url);
+    });
 
-      pdfBtn.addEventListener("click", () => {
-        const opt = {
-          margin: 15,
-          filename: "markdown-export.pdf",
-          image: { type: "jpeg", quality: 0.98 },
-          html2canvas: { scale: 2 },
-          jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-          pagebreak: { mode: ["avoid-all", "css", "legacy"] },
-        };
+    pdfBtn.addEventListener("click", () => {
+      const opt = {
+        margin: 15,
+        filename: "markdown-export.pdf",
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+        pagebreak: { mode: ["avoid-all", "css", "legacy"] },
+      };
 
-        const origText = pdfBtn.innerHTML;
-        pdfBtn.innerHTML =
-          '<svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg> Generating...';
-        html2pdf()
-          .set(opt)
-          .from(preview)
-          .save()
-          .then(() => {
-            pdfBtn.innerHTML =
-              '<svg class="icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Saved!';
-            setTimeout(() => (pdfBtn.innerHTML = origText), 1500);
-          });
-      });
+      const origText = pdfBtn.innerHTML;
+      pdfBtn.innerHTML =
+        '<svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg> Generating...';
+      html2pdf()
+        .set(opt)
+        .from(preview)
+        .save()
+        .then(() => {
+          pdfBtn.innerHTML =
+            '<svg class="icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Saved!';
+          setTimeout(() => (pdfBtn.innerHTML = origText), 1500);
+        });
+    });
 
-      const savedTheme = localStorage.getItem("theme") || "light";
-      document.documentElement.setAttribute("data-theme", savedTheme);
+    const savedTheme = localStorage.getItem("theme") || "light";
+    document.documentElement.setAttribute("data-theme", savedTheme);
+    themeToggle.innerHTML =
+      savedTheme === "dark"
+        ? '<svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg> Light'
+        : '<svg class="icon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg> Dark';
+
+    themeToggle.addEventListener("click", () => {
+      const current = document.documentElement.getAttribute("data-theme");
+      const newTheme = current === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", newTheme);
+      localStorage.setItem("theme", newTheme);
       themeToggle.innerHTML =
-        savedTheme === "dark"
+        newTheme === "dark"
           ? '<svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg> Light'
           : '<svg class="icon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg> Dark';
+    });
 
-      themeToggle.addEventListener("click", () => {
-        const current = document.documentElement.getAttribute("data-theme");
-        const newTheme = current === "dark" ? "light" : "dark";
-        document.documentElement.setAttribute("data-theme", newTheme);
-        localStorage.setItem("theme", newTheme);
-        themeToggle.innerHTML =
-          newTheme === "dark"
-            ? '<svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg> Light'
-            : '<svg class="icon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg> Dark';
-      });
+    document.querySelector(".toolbar").addEventListener("click", (e) => {
+      const btn = e.target.closest("button");
+      if (!btn) return;
 
-      document.querySelector(".toolbar").addEventListener("click", (e) => {
-        const btn = e.target.closest("button");
-        if (!btn) return;
+      const start = md.selectionStart;
+      const end = md.selectionEnd;
+      const selected = md.value.substring(start, end);
+      const before = md.value.substring(0, start);
+      const after = md.value.substring(end);
 
-        const start = md.selectionStart;
-        const end = md.selectionEnd;
-        const selected = md.value.substring(start, end);
-        const before = md.value.substring(0, start);
-        const after = md.value.substring(end);
+      let newText = "";
+      let cursorPos = start;
 
-        let newText = "";
-        let cursorPos = start;
+      if (btn.dataset.insert) {
+        const wrap = btn.dataset.insert;
+        newText = before + wrap + selected + wrap + after;
+        cursorPos = start + wrap.length + selected.length + wrap.length;
+      } else if (btn.dataset.action === "h1") {
+        newText = before + "# " + selected + after;
+        cursorPos = start + 2 + selected.length;
+      } else if (btn.dataset.action === "h2") {
+        newText = before + "## " + selected + after;
+        cursorPos = start + 3 + selected.length;
+      } else if (btn.dataset.action === "h3") {
+        newText = before + "### " + selected + after;
+        cursorPos = start + 4 + selected.length;
+      } else if (btn.dataset.action === "ul") {
+        newText = before + "- " + selected + after;
+        cursorPos = start + 2 + selected.length;
+      } else if (btn.dataset.action === "ol") {
+        newText = before + "1. " + selected + after;
+        cursorPos = start + 3 + selected.length;
+      } else if (btn.dataset.action === "code") {
+        newText = before + "```\n" + selected + "\n```" + after;
+        cursorPos = start + 4 + selected.length;
+      } else if (btn.dataset.action === "link") {
+        const linkText = selected || "link text";
+        newText = before + `[${linkText}](https://)` + after;
+        cursorPos = start + linkText.length + 9; // puts cursor inside the URL
+      } else if (btn.dataset.action === "quote") {
+        newText = before + "> " + selected + after;
+        cursorPos = start + 2 + selected.length;
+      }
 
-        if (btn.dataset.insert) {
-          const wrap = btn.dataset.insert;
-          newText = before + wrap + selected + wrap + after;
-          cursorPos = start + wrap.length + selected.length + wrap.length;
-        } else if (btn.dataset.action === "h1") {
-          newText = before + "# " + selected + after;
-          cursorPos = start + 2 + selected.length;
-        } else if (btn.dataset.action === "h2") {
-          newText = before + "## " + selected + after;
-          cursorPos = start + 3 + selected.length;
-        } else if (btn.dataset.action === "h3") {
-          newText = before + "### " + selected + after;
-          cursorPos = start + 4 + selected.length;
-        } else if (btn.dataset.action === "ul") {
-          newText = before + "- " + selected + after;
-          cursorPos = start + 2 + selected.length;
-        } else if (btn.dataset.action === "ol") {
-          newText = before + "1. " + selected + after;
-          cursorPos = start + 3 + selected.length;
-        } else if (btn.dataset.action === "code") {
-          newText = before + "```\n" + selected + "\n```" + after;
-          cursorPos = start + 4 + selected.length;
-        } else if (btn.dataset.action === "link") {
-          const linkText = selected || "link text";
-          newText = before + `[${linkText}](https://)` + after;
-          cursorPos = start + linkText.length + 9; // puts cursor inside the URL
-        } else if (btn.dataset.action === "quote") {
-          newText = before + "> " + selected + after;
-          cursorPos = start + 2 + selected.length;
-        }
+      md.value = newText;
+      md.focus();
+      md.setSelectionRange(cursorPos, cursorPos);
+      renderHTML();
+    });
+  </script>
+</body>
 
-        md.value = newText;
-        md.focus();
-        md.setSelectionRange(cursorPos, cursorPos);
-        renderHTML();
-      });
-    </script>
-  </body>
 </html>
